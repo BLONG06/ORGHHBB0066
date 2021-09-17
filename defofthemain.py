@@ -28,6 +28,7 @@ def selectPassword():
     c.execute("SELECT PASSWORD FROM LOGGINDATA")
 
 def runMainWindow():
+    global mainwindowframe, mainwindow
     mainwindow = Tk()
     mainwindow.state('zoomed')
     # mainwindow.attributes('-fullscreen', True)
@@ -36,13 +37,13 @@ def runMainWindow():
     mainwindow.resizable(height=False, width=False)
     mainwindowframe = LabelFrame(mainwindow, relief=FLAT)
     registerbutton = Button(mainwindowframe, text=('register'), font=('Arial', 40, 'bold'), padx=600, pady=150,
-                            bg='white', justify="center", command=lambda: register(rootwindow=mainwindow,frame=mainwindowframe)).grid()    
+                            bg='white', justify="center", command=lambda: register(rootwindow=mainwindow)).grid()    
     
     logginbutton = Button(mainwindowframe, text="loggin", font=("Arial", 40, "bold"), padx=620,
                           pady=150, bg='white', command=lambda: loggin(mainwindow)).grid()
     
     mainwindowframe.grid()
-    mainwindow.update()
+    # mainwindow.update()
     mainwindow.mainloop()
 
     
@@ -78,12 +79,11 @@ def all_children(window):
 
     return _list
 
-def goBack(mainframe, frametogoback):
-    def goBackNow(fmtgb):
-        mainframe.grid_remove()
-        fmtgb.grid()
-    gobackbutton = Button(mainframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(frametogoback)).grid()
-    
+def goBack(packbuttonframe, fmtpk,):
+    def goBackNow(destroyframe,frametopack):
+        destroyframe.forget()
+        frametopack.grid()
+    gobackbutton = Button(packbuttonframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(destroyframe=packbuttonframe, frametopack=fmtpk)).grid()
 
 
 def cleanWindow(MainWindow):
@@ -131,8 +131,9 @@ def MyClick(rootwindow, whatever):
     MyLabel.grid()
 
 
-def register(rootwindow, frame):
-    frame.destroy()
+def register(rootwindow):
+    # global mainwindowframe
+    mainwindowframe.destroy()
     usersv = StringVar()
     passwordsv = StringVar()
     registerframe = LabelFrame(rootwindow, relief=FLAT)
@@ -167,7 +168,7 @@ def register(rootwindow, frame):
         # register_attempt()
     windowname = 'Register_Window'
     confirmbutton = Button(registerframe, text='Click Here to Register', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: register_attempt()).grid()
-    goBack(registerframe, frame)
+    goBack(registerframe, mainwindowframe)
     registerframe.grid()
     print()
 
