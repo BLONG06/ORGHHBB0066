@@ -6,7 +6,19 @@ from typing import Counter
 from sqlofthemain import *
 import time
 import itertools
+from os import name as os_name
 
+
+def zoomed(window):
+    """ 
+    Windows and Linux compatible full window creation option
+
+    -> window: Toplevel widget (CLASSNAME)
+    """
+    if os_name == 'nt': 
+        window.state('zoomed') 
+    else: 
+        window.attributes('-zoomed', True)
 
 
 def selectUser():
