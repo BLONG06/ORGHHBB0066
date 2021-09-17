@@ -1,10 +1,9 @@
 from sqlite3.dbapi2 import Error
 from tkinter import *
-from tkinter import font
+from tkinter import font, messagebox
 from tkinter.font import BOLD, Font
 from typing import Counter
 from sqlofthemain import *
-from tkinter import messagebox
 import time
 import itertools
 
