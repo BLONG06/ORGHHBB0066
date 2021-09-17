@@ -1,17 +1,6 @@
 from tkinter import *
 from defofthemain import *
-from os import name as os_name
 
-def zoomed(window):
-    """ 
-    Windows and Linux compatible full window creation option
-
-    -> window: Toplevel widget (CLASSNAME)
-    """
-    if os_name == 'nt': 
-        window.state('zoomed') 
-    else: 
-        window.attributes('-zoomed', True)
 
 # logginwindow = Tk()
 # zoomed(logginwindow)
