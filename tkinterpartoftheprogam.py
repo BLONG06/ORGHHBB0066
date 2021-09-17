@@ -1,18 +1,42 @@
 from tkinter import *
 from defofthemain import *
+from os import name as os_name
+
+def zoomed(window):
+    """ 
+    Windows and Linux compatible full window creation option
+
+    -> window: Toplevel widget (CLASSNAME)
+    """
+    if os_name == 'nt': 
+        window.state('zoomed') 
+    else: 
+        window.attributes('-zoomed', True)
 
 # logginwindow = Tk()
-# logginwindow.state('zoomed')
+# zoomed(logginwindow)
 # logginwindow.title('Loggin')
 # logginwindow.iconbitmap
 # logginwindow.resizable(height=False, width=False)
 
 
-# registerbutton = Button(logginwindow, text=('register'), font=('Arial', 40, 'bold'), padx=600, pady=150,
-#                         bg='white', justify="center", command=lambda: register(registerbutton, logginbutton, logginwindow))
+# registerbutton = Button(logginwindow, 
+#                         text=('register'), 
+#                         font=('Arial', 40, 'bold'), 
+#                         padx=600, 
+#                         pady=150,
+#                         bg='white', 
+#                         justify="center", 
+#                         command=lambda: register(registerbutton, logginbutton, logginwindow))
 
-# logginbutton = Button(logginwindow, text="loggin", font=("Arial", 40, "bold"), padx=620,
-#                       pady=150, bg='white', command=lambda: loggin(registerbutton, logginbutton, logginwindow))
+# logginbutton = Button(logginwindow, 
+#                       text="loggin", 
+#                       font=("Arial", 40, "bold"), 
+#                       padx=620,
+#                       pady=150, 
+#                       bg='white', 
+#                       command=lambda: loggin(registerbutton, logginbutton, logginwindow))
+
 # registerbutton.grid()
 # logginbutton.grid()
 # logginwindow.update()
@@ -22,7 +46,7 @@ runMainWindow()
 root = Tk()
 # root.geometry("500x300+450+250")
 root.title("Personal Database")
-root.state('zoomed')
+zoomed(root)
 # root.attributes('-fullscreen', True)
 # root.iconbitmap("C:/Users/Guilherme/Downloads/personaldata_Msh_icon.ico")
 icon = PhotoImage(file="C:/Users/guilh/OneDrive/Progamar/personaldata.png")
