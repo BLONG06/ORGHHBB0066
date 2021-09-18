@@ -41,7 +41,6 @@ def runMainWindow():
     
     logginbutton = Button(mainwindowframe, text="loggin", font=("Arial", 40, "bold"), padx=620,
                           pady=150, bg='white', command=lambda: loggin(mainwindow)).grid()
-    
     mainwindowframe.grid()
     # mainwindow.update()
     mainwindow.mainloop()
@@ -79,9 +78,9 @@ def all_children(window):
 
     return _list
 
-def goBack(packbuttonframe, fmtpk,):
+def goBack(packbuttonframe, fmtpk):
     def goBackNow(forgetframe,frametopack):
-        forgetframe.forget()
+        forgetframe.grid_forget()
         frametopack.grid()
     gobackbutton = Button(packbuttonframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(forgetframe=packbuttonframe, frametopack=fmtpk)).grid()
 
@@ -132,8 +131,7 @@ def MyClick(rootwindow, whatever):
 
 
 def register(rootwindow):
-    # global mainwindowframe
-    mainwindowframe.destroy()
+    mainwindowframe.grid_forget()
     usersv = StringVar()
     passwordsv = StringVar()
     registerframe = Frame(rootwindow, relief=FLAT)
