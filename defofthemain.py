@@ -141,14 +141,13 @@ def register(rootwindow):
                           font=("Arial", 60, "bold"))
     userentry.grid()
     passwordentry.grid()
-
     def register_attempt():
         selectUser()
         userentryvalue = str(usersv.get())
         # userentryvalue = str(userentryvalue)
         passwordentryvalue = str(passwordsv.get())
         # passwordentryvalue = str(passwordentryvalue)
-        print(userentryvalue, passwordentryvalue)
+        # print(userentryvalue, passwordentryvalue)
         userinlist = usersList()
         passwordinlist = passwordList()
         x = userentryvalue
@@ -161,6 +160,8 @@ def register(rootwindow):
                 messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
             elif (" " in x) or (" " in y):
                 messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
+            elif (x.isascii() == False) or (y.isascii() == False):
+                messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCHII format")
             else:
                 registernow(rootwindow, x, y)
                 
