@@ -24,8 +24,10 @@ def zoomed(window):
 def selectUser():
     c.execute("SELECT USER FROM LOGGINDATA")
 
+
 def selectPassword():
     c.execute("SELECT PASSWORD FROM LOGGINDATA")
+
 
 def runMainWindow():
     global mainwindowframe, mainwindow
@@ -37,8 +39,16 @@ def runMainWindow():
     mainwindow.iconbitmap
     mainwindow.resizable(height=False, width=False)
     mainwindowframe = Frame(mainwindow, relief=FLAT)
-    registerbutton = Button(mainwindowframe, text=('register'), font=('Arial', 40, 'bold'), padx=600, pady=150,
-                            bg='white', justify="center", command=lambda: register(rootwindow=mainwindow)).grid()    
+    
+    registerbutton = Button(mainwindowframe, 
+                            text=('register'), 
+                            font=('Arial', 40, 'bold'), 
+                            padx=600, 
+                            pady=150,
+                            bg='white', 
+                            justify="center", 
+                            command=lambda: register(rootwindow=mainwindow)
+                            ).grid()    
     
     logginbutton = Button(mainwindowframe, text="loggin", font=("Arial", 40, "bold"), padx=620,
                           pady=150, bg='white', command=lambda: loggin(mainwindow)).grid()
@@ -51,6 +61,7 @@ class ValueIsEmptyError(Error):
     """Raised when there is nothing in the entry input field"""
     pass
 
+
 def entryValueChecker(entry, entry2):
     """
         It's gonna return True if there is nothing, or it's gonna return False if there is anything.
@@ -61,6 +72,7 @@ def entryValueChecker(entry, entry2):
     else:
         return False
 
+
 # class valueIsEmpty(Exception):
 #     def __init__(self, message, entry, entry2):
 #        super().__init__(message)
@@ -69,6 +81,7 @@ def entryValueChecker(entry, entry2):
 #        self.entry2 = entry2
 #        if entryValueChecker(entry, entry2) == True:
 #            raise valueIsEmpty(message="You have to put something on the entry", entry=entry, e2=entry2)
+
 
 def all_children(window):
     _list = window.winfo_children()
@@ -79,17 +92,28 @@ def all_children(window):
 
     return _list
 
+
 def goBack(packbuttonframe, fmtpk):
+
     def goBackNow(forgetframe,frametopack):
         forgetframe.grid_forget()
         frametopack.grid()
-    gobackbutton = Button(packbuttonframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(forgetframe=packbuttonframe, frametopack=fmtpk)).grid()
+
+    gobackbutton = Button(packbuttonframe, 
+                        text='Go Back', 
+                        font=("Arial", 60, BOLD), 
+                        relief=GROOVE, 
+                        padx=220, 
+                        pady=50, 
+                        command=lambda: goBackNow(packbuttonframe, fmtpk)
+                        ).grid()
 
 
 def cleanWindow(MainWindow):
     widget_list = all_children(MainWindow)
     for item in widget_list:
         item.destroy()
+
 
 def registernow(mainwindow,usrentv,pwdentv):
     c.execute("SELECT * FROM LOGGINDATA")
@@ -99,6 +123,7 @@ def registernow(mainwindow,usrentv,pwdentv):
                         message="Successfully Registered")
     cleanWindow(mainwindow)
     mainwindow.update()
+
 
 def flatit(listtoflat):
     flatten = itertools.chain.from_iterable
@@ -117,13 +142,8 @@ def usersList():
 
 def passwordList():
     selectPassword()
-    passwordinlist = []
-    for queryresult in c.fetchall():
-        passwordinlist.append(queryresult)
-    passwordinlist = flatit(passwordinlist)
-    return passwordinlist
-
-
+    passwordinlist = [queryresult for queryresult in c.fetchall()]
+    return flatit(passwordinlist)
 
 
 def MyClick(rootwindow, whatever):
@@ -132,15 +152,6 @@ def MyClick(rootwindow, whatever):
 
 
 def register(rootwindow):
-    mainwindowframe.grid_forget()
-    usersv = StringVar()
-    passwordsv = StringVar()
-    registerframe = Frame(rootwindow, relief=FLAT)
-    userentry = Entry(registerframe, textvariable=usersv, font=("Arial", 60, "bold"))
-    passwordentry = Entry(registerframe, textvariable=passwordsv,
-                          font=("Arial", 60, "bold"))
-    userentry.grid()
-    passwordentry.grid()
 
     def register_attempt():
         selectUser()
@@ -163,24 +174,43 @@ def register(rootwindow):
                 messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
             else:
                 registernow(rootwindow, x, y)
+
+    mainwindowframe.grid_forget()
+    usersv = StringVar()
+    passwordsv = StringVar()
+    
+    registerframe = Frame(rootwindow, relief=FLAT)
+   
+    userentry = Entry(registerframe, 
+                        textvariable=usersv, 
+                        font=("Arial", 60, "bold")
+                        )
+    
+    passwordentry = Entry(registerframe, 
+                            textvariable=passwordsv,
+                            font=("Arial", 60, "bold")
+                            )
+    
+    userentry.grid()
+    passwordentry.grid()
                 
         # register_attempt()
-    confirmbutton = Button(registerframe, text='Click Here to Register', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: register_attempt()).grid()
+    
+    confirmbutton = Button(registerframe, 
+                            text='Click Here to Register', 
+                            font=("Arial", 60, BOLD), 
+                            relief=GROOVE, 
+                            padx=220, 
+                            pady=50, 
+                            command=lambda: register_attempt()
+                            ).grid()
+    
     goBack(registerframe, mainwindowframe)
     registerframe.grid()
     print()
 
 
 def loggin(rootwindow):
-    mainwindowframe.grid_forget()
-    usersv = StringVar()
-    passwordsv = StringVar()
-    logginframe = Frame(rootwindow, relief=FLAT)
-    userentry = Entry(logginframe, textvariable=usersv, font=("Arial", 60, "bold"))
-    passwordentry = Entry(logginframe, textvariable=passwordsv,
-                          font=("Arial", 60, "bold"))
-    userentry.grid()
-    passwordentry.grid()
 
     def loggin_attempt():
         selectUser()
@@ -205,8 +235,33 @@ def loggin(rootwindow):
             else:
                 messagebox.showerror(
                 title="Error", message="The typed user doesn't exist")
-    confirmbutton = Button(logginframe, text='Click Here to Loggin', font=(
-        "Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: loggin_attempt()).grid()
+
+    mainwindowframe.grid_forget()
+    usersv = StringVar()
+    passwordsv = StringVar()
+    
+    logginframe = Frame(rootwindow, relief=FLAT)
+    
+    userentry = Entry(logginframe, 
+                        textvariable=usersv, 
+                        font=("Arial", 60, "bold"))
+    
+    passwordentry = Entry(logginframe, 
+                        textvariable=passwordsv,
+                        font=("Arial", 60, "bold"))
+    
+    userentry.grid()
+    passwordentry.grid()
+
+    confirmbutton = Button(logginframe, 
+                            text='Click Here to Loggin', 
+                            font=("Arial", 60, BOLD), 
+                            relief=GROOVE, 
+                            padx=220, 
+                            pady=50, 
+                            command=lambda: loggin_attempt()
+                            ).grid()
+
     goBack(logginframe, mainwindowframe)
     logginframe.grid()
     # for query_result in c.fetchall():
