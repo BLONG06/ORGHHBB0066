@@ -5,6 +5,20 @@ from tkinter.font import BOLD
 from sqlofthemain import *
 from itertools import chain
 from os import name as os_name
+    
+
+class ValueIsEmptyError(Error):
+    """Raised when there is nothing in the entry input field"""
+    pass
+
+# class valueIsEmpty(Exception):
+#     def __init__(self, message, entry, entry2):
+#        super().__init__(message)
+#        entryValueChecker().__init__(entry, entry2)
+#        self.entry = entry
+#        self.entry2 = entry2
+#        if entryValueChecker(entry, entry2) == True:
+#            raise valueIsEmpty(message="You have to put something on the entry", entry=entry, e2=entry2)
 
 
 def zoomed(window):
@@ -26,28 +40,40 @@ def selectUser():
 def selectPassword():
     c.execute("SELECT PASSWORD FROM LOGGINDATA")
 
+
+def runMainWindow():
+    global mainwindowframe, mainwindow
+    mainwindow = Tk()
+    # mainwindow.state('zoomed')
+    zoomed(mainwindow)
+    # mainwindow.attributes('-fullscreen', True)
+    mainwindow.title('Loggin')
+    mainwindow.iconbitmap
+    mainwindow.resizable(height=False, width=False)
+    mainwindowframe = Frame(mainwindow, relief=FLAT)
     
-class ValueIsEmptyError(Error):
-    """Raised when there is nothing in the entry input field"""
-    pass
+    registerbutton = Button(mainwindowframe, 
+                            text='register', 
+                            font=('Arial', 40, 'bold'), 
+                            padx=600, 
+                            pady=150,
+                            bg='white', 
+                            justify="center", 
+                            command=lambda: register(mainwindow)
+                            ).grid()    
+    
+    logginbutton = Button(mainwindowframe, 
+                            text="loggin", 
+                            font=("Arial", 40, "bold"), 
+                            padx=620,
+                            pady=150, 
+                            bg='white', 
+                            command=lambda: loggin(mainwindow)
+                            ).grid()
 
-
-def entryValueChecker(entry: str, entry2: str) -> bool:
-    """
-        It's gonna return True if there is nothing, or it's gonna return False if there is anything.
-
-    """
-    return True if entry.strip().isspace() or entry2.strip().isspace() else False
-
-
-# class valueIsEmpty(Exception):
-#     def __init__(self, message, entry, entry2):
-#        super().__init__(message)
-#        entryValueChecker().__init__(entry, entry2)
-#        self.entry = entry
-#        self.entry2 = entry2
-#        if entryValueChecker(entry, entry2) == True:
-#            raise valueIsEmpty(message="You have to put something on the entry", entry=entry, e2=entry2)
+    mainwindowframe.grid()
+    # mainwindow.update()
+    mainwindow.mainloop()
 
 
 def all_children(window):
@@ -113,6 +139,13 @@ def MyClick(rootwindow, whatever):
 
 def superattempt(rootwindow, TypeofAttempt):
 
+    def entryValueChecker(entry, entry2):
+        """
+            It's gonna return True if there is nothing, or it's gonna return False if there is anything.
+
+        """
+        return True if entry.strip().isspace() or entry2.strip().isspace() else False
+
     def attempts(TypeofAttempt: str):
 
         def register(x, y, userinlist, passwordinlist):
@@ -123,7 +156,7 @@ def superattempt(rootwindow, TypeofAttempt):
             
             elif (x not in userinlist) or (y not in passwordinlist):
                 
-                if entryValueChecker(x, y):
+                if entryValueChecker(x, y) == True :
                     messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
                 
                 elif (" " in x) or (" " in y):
@@ -183,22 +216,27 @@ def superattempt(rootwindow, TypeofAttempt):
     
     userentry.grid()
     passwordentry.grid()
-
-    confirmbutton = Button(frame, 
-                            font=("Arial", 60, BOLD), 
-                            relief=GROOVE,
-                            padx=220, 
-                            pady=50, 
-                            )
-    
+                
     # register_attempt()
     if TypeofAttempt == 'REGISTER':
-        confirmbutton.command(lambda: attempts('REGISTER'))
-    
-    else:
-        confirmbutton.command(lambda: attempts('LOGGIN'))
-    
-    confirmbutton.grid()
+        confirmbutton = Button(frame, 
+                                text='Click Here to register', 
+                                font=("Arial", 60, BOLD), 
+                                relief=GROOVE, 
+                                padx=220, 
+                                pady=50, 
+                                command=lambda: attempts('REGISTER') 
+                                ).grid()
+                                
+    if TypeofAttempt == 'LOGGIN':
+        confirmbutton = Button(frame, 
+                                text='Click Here to loggin', 
+                                font=("Arial", 60, BOLD), 
+                                relief=GROOVE, 
+                                padx=220, 
+                                pady=50, 
+                                command=lambda: attempts('LOGGIN') 
+                                ).grid()
 
     goBack(frame, mainwindowframe)
     frame.grid()
@@ -226,40 +264,6 @@ def loggin(rootwindow):
     #                 messagebox.showerror(title="Error", message="User does not exists")
     #             print(notinlist)
 
-
-def runMainWindow():
-    global mainwindowframe, mainwindow
-    mainwindow = Tk()
-    # mainwindow.state('zoomed')
-    zoomed(mainwindow)
-    # mainwindow.attributes('-fullscreen', True)
-    mainwindow.title('Loggin')
-    mainwindow.iconbitmap
-    mainwindow.resizable(height=False, width=False)
-    mainwindowframe = Frame(mainwindow, relief=FLAT)
-    
-    registerbutton = Button(mainwindowframe, 
-                            text=('register'), 
-                            font=('Arial', 40, 'bold'), 
-                            padx=600, 
-                            pady=150,
-                            bg='white', 
-                            justify="center", 
-                            command=lambda: register(mainwindow)
-                            ).grid()    
-    
-    logginbutton = Button(mainwindowframe, 
-                            text="loggin", 
-                            font=("Arial", 40, "bold"), 
-                            padx=620,
-                            pady=150, 
-                            bg='white', 
-                            command=lambda: loggin(mainwindow)
-                            ).grid()
-
-    mainwindowframe.grid()
-    # mainwindow.update()
-    mainwindow.mainloop()
 
 # widget_list = all_children(rootwindow)
 #                 for item in widget_list:
