@@ -83,7 +83,7 @@ def goBack(packbuttonframe, fmtpk,):
     def goBackNow(forgetframe,frametopack):
         forgetframe.forget()
         frametopack.grid()
-    gobackbutton = Button(packbuttonframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(forgetframe=packbuttonframe, frametopack=fmtpk)).grid(packbuttonframe)
+    gobackbutton = Button(packbuttonframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(forgetframe=packbuttonframe, frametopack=fmtpk)).grid()
 
 
 def cleanWindow(MainWindow):
