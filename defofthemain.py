@@ -35,7 +35,7 @@ def runMainWindow():
     mainwindow.title('Loggin')
     mainwindow.iconbitmap
     mainwindow.resizable(height=False, width=False)
-    mainwindowframe = LabelFrame(mainwindow, relief=FLAT)
+    mainwindowframe = Frame(mainwindow, relief=FLAT)
     registerbutton = Button(mainwindowframe, text=('register'), font=('Arial', 40, 'bold'), padx=600, pady=150,
                             bg='white', justify="center", command=lambda: register(rootwindow=mainwindow)).grid()    
     
@@ -80,10 +80,10 @@ def all_children(window):
     return _list
 
 def goBack(packbuttonframe, fmtpk,):
-    def goBackNow(destroyframe,frametopack):
-        destroyframe.forget()
+    def goBackNow(forgetframe,frametopack):
+        forgetframe.forget()
         frametopack.grid()
-    gobackbutton = Button(packbuttonframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(destroyframe=packbuttonframe, frametopack=fmtpk)).grid()
+    gobackbutton = Button(packbuttonframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(forgetframe=packbuttonframe, frametopack=fmtpk)).grid(packbuttonframe)
 
 
 def cleanWindow(MainWindow):
@@ -136,7 +136,7 @@ def register(rootwindow):
     mainwindowframe.destroy()
     usersv = StringVar()
     passwordsv = StringVar()
-    registerframe = LabelFrame(rootwindow, relief=FLAT)
+    registerframe = Frame(rootwindow, relief=FLAT)
     userentry = Entry(registerframe, textvariable=usersv, font=("Arial", 60, "bold"))
     passwordentry = Entry(registerframe, textvariable=passwordsv,
                           font=("Arial", 60, "bold"))
