@@ -147,10 +147,9 @@ def MyClick(rootwindow, whatever):
 
 
 def superattempt(rootwindow, TypeofAttempt):
-    global x, y, userinlist, passwordinlist
     def attempts(TypeofAttempt: str):
 
-        def register():
+        def register(x, y, userinlist, passwordinlist):
             print(x, y)
 
             if (x in userinlist): #and (y in passwordinlist)
@@ -167,7 +166,7 @@ def superattempt(rootwindow, TypeofAttempt):
                 else:
                     registernow(rootwindow, x, y)
 
-        def loggin():
+        def loggin(x, y, userinlist, passwordinlist):
             if (x in userinlist) and (y in passwordinlist):
                 cleanWindow(frame)
             
@@ -196,10 +195,10 @@ def superattempt(rootwindow, TypeofAttempt):
         passwordinlist = Lists('PASSWRD')
 
         if TypeofAttempt.upper() == 'REGISTER':
-            register()
+            register(x, y, userinlist, passwordinlist)
         
         elif TypeofAttempt == 'LOGGIN':
-            loggin()
+            loggin(x, y, userinlist, passwordinlist)
 
     mainwindowframe.grid_forget()
     usersv = StringVar()
@@ -228,7 +227,7 @@ def superattempt(rootwindow, TypeofAttempt):
                             padx=220, 
                             pady=50, 
                             command=lambda: attempts('REGISTER') 
-                                    if TypeofAttempt == 'REGISTER' else 'LOGGIN'
+                                    if TypeofAttempt == 'REGISTER' else attempts('LOGGIN')
                             ).grid()
     
     goBack(frame, mainwindowframe)

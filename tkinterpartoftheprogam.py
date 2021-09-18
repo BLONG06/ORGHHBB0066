@@ -36,7 +36,7 @@ root = Tk()
 # root.geometry("500x300+450+250")
 root.title("Personal Database")
 zoomed(root)
-# root.attributes('-fullscreen', True)
+
 # root.iconbitmap("C:/Users/Guilherme/Downloads/personaldata_Msh_icon.ico")
 icon = PhotoImage(file="C:/Users/guilh/OneDrive/Progamar/personaldata.png")
 root.iconphoto(True, icon)
