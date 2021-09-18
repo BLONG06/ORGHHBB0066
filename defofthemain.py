@@ -164,7 +164,6 @@ def register(rootwindow):
                 registernow(rootwindow, x, y)
                 
         # register_attempt()
-    windowname = 'Register_Window'
     confirmbutton = Button(registerframe, text='Click Here to Register', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: register_attempt()).grid()
     goBack(registerframe, mainwindowframe)
     registerframe.grid()
@@ -172,10 +171,10 @@ def register(rootwindow):
 
 
 def loggin(rootwindow):
-    cleanWindow(rootwindow)
+    mainwindowframe.grid_forget()
     usersv = StringVar()
     passwordsv = StringVar()
-    logginframe = LabelFrame(rootwindow, relief=FLAT)
+    logginframe = Frame(rootwindow, relief=FLAT)
     userentry = Entry(logginframe, textvariable=usersv, font=("Arial", 60, "bold"))
     passwordentry = Entry(logginframe, textvariable=passwordsv,
                           font=("Arial", 60, "bold"))
@@ -202,14 +201,12 @@ def loggin(rootwindow):
                 messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
             elif (x in userinlist) and (y not in passwordinlist):
                 messagebox.showwarning(title='Password Error', message="Wrong Password")
-                
             else:
                 messagebox.showerror(
                 title="Error", message="The typed user doesn't exist")
-    windowname = 'Loggin_Window'
     confirmbutton = Button(logginframe, text='Click Here to Loggin', font=(
         "Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: loggin_attempt()).grid()
-    # goBack(logginframe)
+    goBack(logginframe, mainwindowframe)
     logginframe.grid()
     # for query_result in c.fetchall():
     #         if userentryvalue not in query_result:
