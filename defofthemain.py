@@ -72,10 +72,7 @@ def entryValueChecker(entry, entry2):
         It's gonna return True if there is nothing, or it's gonna return False if there is anything.
 
     """
-    if (entry.isspace() == True or entry == "") or (entry2.isspace() == True or entry2 == ""):
-        return True
-    else:
-        return False
+    return True if entry.strip().isspace() or entry2.strip().isspace() else False
 
 
 # class valueIsEmpty(Exception):
@@ -132,21 +129,16 @@ def registernow(mainwindow,usrentv,pwdentv):
     mainwindow.update()
 
 
-def flatit(listtoflat):
-    flatten = chain.from_iterable
-    return list(flatten(listtoflat))
+def Lists(TipeofList: str):
 
+    def flatit(listtoflat):
+        flatten = chain.from_iterable
+        return list(flatten(listtoflat))
 
-def usersList():
-    selectUser()
-    userinlist = [queryresult for queryresult in c.fetchall()]
-    return flatit(userinlist)
+    selectUser() if TipeofList.upper() == 'USER' else selectPassword()
 
-
-def passwordList():
-    selectPassword()
-    passwordinlist = [queryresult for queryresult in c.fetchall()]
-    return flatit(passwordinlist)
+    List = [queryresult for queryresult in c.fetchall()]
+    return flatit(List)
 
 
 def MyClick(rootwindow, whatever):
@@ -167,8 +159,8 @@ def register(rootwindow):
         # passwordentryvalue = str(passwordentryvalue)
         print(x, y)
 
-        userinlist = usersList()
-        passwordinlist = passwordList()
+        userinlist = Lists('USER')
+        passwordinlist = Lists('PASSWRD')
 
         if (x in userinlist): #and (passwordentryvalue in passwordinlist)
             messagebox.showerror(title="Error", message="The typed user already exist")
@@ -228,8 +220,8 @@ def loggin(rootwindow):
         y = str(passwordsv.get())
         # passwordentryvalue = str(passwordentryvalue)
         
-        userinlist = usersList()
-        passwordinlist = passwordList()
+        userinlist = Lists('USER')
+        passwordinlist = Lists('PASSWRD')
         tries = 0
         
         if (x in userinlist) and (y in passwordinlist):
