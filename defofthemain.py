@@ -88,12 +88,10 @@ def entryValueChecker(entry, entry2):
 def all_children(window):
     _list = window.winfo_children()
 
-    _list.extend(item.winfo_children() for item in _list if item.winfo_children())
-    '''
     for item in _list:
         if item.winfo_children():
             _list.extend(item.winfo_children())
-    '''
+    
     return _list
 
 
@@ -148,46 +146,72 @@ def MyClick(rootwindow, whatever):
     MyLabel.grid()
 
 
-def register(rootwindow):
+def superattempt(rootwindow, TypeofAttempt):
+    global x, y, userinlist, passwordinlist
+    def attempts(TypeofAttempt: str):
 
-    def register_attempt():
+        def register():
+            print(x, y)
+
+            if (x in userinlist): #and (y in passwordinlist)
+                messagebox.showerror(title="Error", message="The typed user already exist")
+            
+            elif (x not in userinlist) or (y not in passwordinlist):
+                
+                if entryValueChecker(x, y) == True :
+                    messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
+                
+                elif (" " in x) or (" " in y):
+                    messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
+                
+                else:
+                    registernow(rootwindow, x, y)
+
+        def loggin():
+            if (x in userinlist) and (y in passwordinlist):
+                cleanWindow(frame)
+            
+            elif (x not in userinlist) or (y not in passwordinlist):
+                
+                if x == "" or y == "":# if entryValueChecker(x, y) == True :
+                    messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
+                
+                elif " " in x or " " in y:
+                    messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
+                
+                elif (x in userinlist) and (y not in passwordinlist):
+                    messagebox.showwarning(title='Password Error', message="Wrong Password")
+                
+                else:
+                    messagebox.showerror(
+                    title="Error", message="The typed user doesn't exist")
+
         selectUser()
-        
         x = str(usersv.get())
         # userentryvalue = str(userentryvalue)
         y = str(passwordsv.get())
         # passwordentryvalue = str(passwordentryvalue)
-        print(x, y)
-
+        
         userinlist = Lists('USER')
         passwordinlist = Lists('PASSWRD')
 
-        if (x in userinlist): #and (passwordentryvalue in passwordinlist)
-            messagebox.showerror(title="Error", message="The typed user already exist")
+        if TypeofAttempt.upper() == 'REGISTER':
+            register()
         
-        elif (x not in userinlist) or (y not in passwordinlist):
-            
-            if entryValueChecker(x, y) == True :
-                messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
-            
-            elif (" " in x) or (" " in y):
-                messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
-            
-            else:
-                registernow(rootwindow, x, y)
+        elif TypeofAttempt == 'LOGGIN':
+            loggin()
 
     mainwindowframe.grid_forget()
     usersv = StringVar()
     passwordsv = StringVar()
-    
-    registerframe = Frame(rootwindow, relief=FLAT)
-   
-    userentry = Entry(registerframe, 
+    frame = Frame(rootwindow, relief=FLAT)
+
+    userentry = Entry(frame, 
                         textvariable=usersv, 
                         font=("Arial", 60, "bold")
                         )
     
-    passwordentry = Entry(registerframe, 
+    passwordentry = Entry(frame, 
                             textvariable=passwordsv,
                             font=("Arial", 60, "bold")
                             )
@@ -195,83 +219,30 @@ def register(rootwindow):
     userentry.grid()
     passwordentry.grid()
                 
-        # register_attempt()
-    
-    confirmbutton = Button(registerframe, 
+    # register_attempt()
+
+    confirmbutton = Button(frame, 
                             text='Click Here to Register', 
                             font=("Arial", 60, BOLD), 
                             relief=GROOVE, 
                             padx=220, 
                             pady=50, 
-                            command=lambda: register_attempt()
+                            command=lambda: attempts('REGISTER') 
+                                    if TypeofAttempt == 'REGISTER' else 'LOGGIN'
                             ).grid()
     
-    goBack(registerframe, mainwindowframe)
-    registerframe.grid()
+    goBack(frame, mainwindowframe)
+    frame.grid()
     print()
 
 
+def register(rootwindow): 
+    superattempt(rootwindow, 'REGISTER')
+
+
 def loggin(rootwindow):
+    superattempt(rootwindow, 'LOGGIN')
 
-    def loggin_attempt():
-        selectUser()
-        x = str(usersv.get())
-        # userentryvalue = str(userentryvalue)
-        y = str(passwordsv.get())
-        # passwordentryvalue = str(passwordentryvalue)
-        
-        userinlist = Lists('USER')
-        passwordinlist = Lists('PASSWRD')
-        tries = 0
-        
-        if (x in userinlist) and (y in passwordinlist):
-            cleanWindow(logginframe)
-        
-        elif (x not in userinlist) or (y not in passwordinlist):
-            
-            if x == "" or y == "":# if entryValueChecker(x, y) == True :
-                messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
-            
-            elif " " in x or " " in y:
-                messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
-            
-            elif (x in userinlist) and (y not in passwordinlist):
-                messagebox.showwarning(title='Password Error', message="Wrong Password")
-            
-            else:
-                messagebox.showerror(
-                title="Error", message="The typed user doesn't exist")
-
-    mainwindowframe.grid_forget()
-    usersv = StringVar()
-    passwordsv = StringVar()
-    
-    logginframe = Frame(rootwindow, relief=FLAT)
-    
-    userentry = Entry(logginframe, 
-                        textvariable=usersv, 
-                        font=("Arial", 60, "bold")
-                        )
-    
-    passwordentry = Entry(logginframe, 
-                        textvariable=passwordsv,
-                        font=("Arial", 60, "bold")
-                        )
-    
-    userentry.grid()
-    passwordentry.grid()
-
-    confirmbutton = Button(logginframe, 
-                            text='Click Here to Loggin', 
-                            font=("Arial", 60, BOLD), 
-                            relief=GROOVE, 
-                            padx=220, 
-                            pady=50, 
-                            command=lambda: loggin_attempt()
-                            ).grid()
-
-    goBack(logginframe, mainwindowframe)
-    logginframe.grid()
     # for query_result in c.fetchall():
     #         if userentryvalue not in query_result:
     #             # messagebox.showerror(title="Error", message="User doesn't exist, please come back and register")
