@@ -50,8 +50,15 @@ def runMainWindow():
                             command=lambda: register(rootwindow=mainwindow)
                             ).grid()    
     
-    logginbutton = Button(mainwindowframe, text="loggin", font=("Arial", 40, "bold"), padx=620,
-                          pady=150, bg='white', command=lambda: loggin(mainwindow)).grid()
+    logginbutton = Button(mainwindowframe, 
+                            text="loggin", 
+                            font=("Arial", 40, "bold"), 
+                            padx=620,
+                            pady=150, 
+                            bg='white', 
+                            command=lambda: loggin(mainwindow)
+                            ).grid()
+
     mainwindowframe.grid()
     # mainwindow.update()
     mainwindow.mainloop()
@@ -86,10 +93,12 @@ def entryValueChecker(entry, entry2):
 def all_children(window):
     _list = window.winfo_children()
 
+    _list.extend(item.winfo_children() for item in _list if item.winfo_children())
+    '''
     for item in _list:
         if item.winfo_children():
             _list.extend(item.winfo_children())
-
+    '''
     return _list
 
 
@@ -127,17 +136,13 @@ def registernow(mainwindow,usrentv,pwdentv):
 
 def flatit(listtoflat):
     flatten = itertools.chain.from_iterable
-    listtoflat = list(flatten(listtoflat))
-    return listtoflat
+    return list(flatten(listtoflat))
 
 
 def usersList():
     selectUser()
-    userinlist = []
-    for queryresult in c.fetchall():
-        userinlist.append(queryresult)
-    userinlist = flatit(userinlist)
-    return userinlist
+    userinlist = [queryresult for queryresult in c.fetchall()]
+    return flatit(userinlist)
 
 
 def passwordList():
@@ -147,7 +152,9 @@ def passwordList():
 
 
 def MyClick(rootwindow, whatever):
-    MyLabel = Label(rootwindow, text=(f"Hello {whatever.get()}"))
+    MyLabel = Label(rootwindow, 
+                    text=(f"Hello {whatever.get()}")
+                    )
     MyLabel.grid()
 
 
@@ -155,23 +162,27 @@ def register(rootwindow):
 
     def register_attempt():
         selectUser()
-        userentryvalue = str(usersv.get())
+        
+        x = str(usersv.get())
         # userentryvalue = str(userentryvalue)
-        passwordentryvalue = str(passwordsv.get())
+        y = str(passwordsv.get())
         # passwordentryvalue = str(passwordentryvalue)
-        print(userentryvalue, passwordentryvalue)
+        print(x, y)
+
         userinlist = usersList()
         passwordinlist = passwordList()
-        x = userentryvalue
-        y = passwordentryvalue
-        if (userentryvalue in userinlist): #and (passwordentryvalue in passwordinlist)
-            messagebox.showerror(
-                title="Error", message="The typed user already exist")
-        elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
+
+        if (x in userinlist): #and (passwordentryvalue in passwordinlist)
+            messagebox.showerror(title="Error", message="The typed user already exist")
+        
+        elif (x not in userinlist) or (y not in passwordinlist):
+            
             if entryValueChecker(x, y) == True :
                 messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
+            
             elif (" " in x) or (" " in y):
                 messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
+            
             else:
                 registernow(rootwindow, x, y)
 
@@ -214,24 +225,29 @@ def loggin(rootwindow):
 
     def loggin_attempt():
         selectUser()
-        userentryvalue = str(usersv.get())
+        x = str(usersv.get())
         # userentryvalue = str(userentryvalue)
-        passwordentryvalue = str(passwordsv.get())
+        y = str(passwordsv.get())
         # passwordentryvalue = str(passwordentryvalue)
+        
         userinlist = usersList()
         passwordinlist = passwordList()
-        x = userentryvalue
-        y = passwordentryvalue
         tries = 0
-        if (userentryvalue in userinlist) and (passwordentryvalue in passwordinlist):
+        
+        if (x in userinlist) and (y in passwordinlist):
             cleanWindow(logginframe)
-        elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
+        
+        elif (x not in userinlist) or (y not in passwordinlist):
+            
             if x == "" or y == "":# if entryValueChecker(x, y) == True :
                 messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
+            
             elif " " in x or " " in y:
                 messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
+            
             elif (x in userinlist) and (y not in passwordinlist):
                 messagebox.showwarning(title='Password Error', message="Wrong Password")
+            
             else:
                 messagebox.showerror(
                 title="Error", message="The typed user doesn't exist")
@@ -244,11 +260,13 @@ def loggin(rootwindow):
     
     userentry = Entry(logginframe, 
                         textvariable=usersv, 
-                        font=("Arial", 60, "bold"))
+                        font=("Arial", 60, "bold")
+                        )
     
     passwordentry = Entry(logginframe, 
                         textvariable=passwordsv,
-                        font=("Arial", 60, "bold"))
+                        font=("Arial", 60, "bold")
+                        )
     
     userentry.grid()
     passwordentry.grid()
