@@ -30,7 +30,8 @@ def selectPassword():
 def runMainWindow():
     global mainwindowframe, mainwindow
     mainwindow = Tk()
-    mainwindow.state('zoomed')
+    # mainwindow.state('zoomed')
+    zoomed(mainwindow)
     # mainwindow.attributes('-fullscreen', True)
     mainwindow.title('Loggin')
     mainwindow.iconbitmap
