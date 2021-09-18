@@ -1,11 +1,9 @@
 from sqlite3.dbapi2 import Error
 from tkinter import *
-from tkinter import font, messagebox
-from tkinter.font import BOLD, Font
-from typing import Counter
+from tkinter import messagebox
+from tkinter.font import BOLD
 from sqlofthemain import *
-import time
-import itertools
+from itertools import chain
 from os import name as os_name
 
 
@@ -135,7 +133,7 @@ def registernow(mainwindow,usrentv,pwdentv):
 
 
 def flatit(listtoflat):
-    flatten = itertools.chain.from_iterable
+    flatten = chain.from_iterable
     return list(flatten(listtoflat))
 
 
