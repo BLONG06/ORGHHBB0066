@@ -11,6 +11,7 @@ class ValueIsEmptyError(Error):
     """Raised when there is nothing in the entry input field"""
     pass
 
+
 # class valueIsEmpty(Exception):
 #     def __init__(self, message, entry, entry2):
 #        super().__init__(message)
@@ -138,13 +139,16 @@ def MyClick(rootwindow, whatever):
 
 
 def superattempt(rootwindow, TypeofAttempt):
-
+    
     def entryValueChecker(entry, entry2):
         """
             It's gonna return True if there is nothing, or it's gonna return False if there is anything.
 
         """
-        return True if entry.strip().isspace() or entry2.strip().isspace() else False
+        if (entry.isspace() == True or entry == "") or (entry2.isspace() == True or entry2 == ""):
+            return True
+        else:
+            return False
 
     def attempts(TypeofAttempt: str):
 
@@ -156,7 +160,7 @@ def superattempt(rootwindow, TypeofAttempt):
             
             elif (x not in userinlist) or (y not in passwordinlist):
                 
-                if entryValueChecker(x, y) == True :
+                if entryValueChecker(x, y) == True:
                     messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
                 
                 elif (" " in x) or (" " in y):
@@ -195,7 +199,7 @@ def superattempt(rootwindow, TypeofAttempt):
 
         if TypeofAttempt.upper() == 'REGISTER':
             register(x, y, userinlist, passwordinlist)
-        
+
         elif TypeofAttempt == 'LOGGIN':
             loggin(x, y, userinlist, passwordinlist)
 
@@ -227,7 +231,7 @@ def superattempt(rootwindow, TypeofAttempt):
                                 pady=50, 
                                 command=lambda: attempts('REGISTER') 
                                 ).grid()
-                                
+
     if TypeofAttempt == 'LOGGIN':
         confirmbutton = Button(frame, 
                                 text='Click Here to loggin', 
