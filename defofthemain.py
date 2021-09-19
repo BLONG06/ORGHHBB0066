@@ -229,7 +229,7 @@ def loggin(rootwindow):
 #                 for item in widget_list:
 #                         item.destroy()
 #             elif userentryvalue not in query_result:
-#                 messagebox.showerror(title="Error", message="User doesn't exist, please come back and register")
+#                 messagebox.showerror(title="Error", message="User doesn't exist, please come back and register!")
 
 
    #     time.sleep(5)
