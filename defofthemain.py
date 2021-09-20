@@ -6,8 +6,8 @@ from typing import Counter
 from sqlofthemain import *
 import time
 import itertools
+import datetime
 from os import name as os_name
-
 
 def zoomed(window):
     """ 
@@ -30,17 +30,18 @@ def selectPassword():
 def runMainWindow():
     global mainwindowframe, mainwindow
     mainwindow = Tk()
+    icon = PhotoImage(file="C:/Users/guilh/Desktop/ORGHHBB0066/imagens/personaldata.png")
+    mainwindow.iconphoto(True, icon)
     # mainwindow.state('zoomed')
     zoomed(mainwindow)
     # mainwindow.attributes('-fullscreen', True)
     mainwindow.title('Loggin')
-    mainwindow.iconbitmap
     mainwindow.resizable(height=False, width=False)
     mainwindowframe = Frame(mainwindow, relief=FLAT)
     registerbutton = Button(mainwindowframe, text=('register'), font=('Arial', 40, 'bold'), padx=600, pady=150,
                             bg='white', justify="center", command=lambda: register(rootwindow=mainwindow)).grid()    
     
-    logginbutton = Button(mainwindowframe, text="loggin", font=("Arial", 40, "bold"), padx=620,
+    logginbutton = Button(mainwindowframe, text="loggin", font=("Arial", 40, "bold"), padx=600,
                           pady=150, bg='white', command=lambda: loggin(mainwindow)).grid()
     mainwindowframe.grid()
     # mainwindow.update()
@@ -123,12 +124,10 @@ def passwordList():
     passwordinlist = flatit(passwordinlist)
     return passwordinlist
 
-
-
-
-def MyClick(rootwindow, whatever):
-    MyLabel = Label(rootwindow, text=(f"Hello {whatever.get()}"))
-    MyLabel.grid()
+def rowchecker(usrtv,pwdtv):
+    c.execute("SELECT * FROM LOGGINDATA")
+    
+    c.fetchall()
 
 
 def register(rootwindow):
@@ -155,13 +154,13 @@ def register(rootwindow):
         if (userentryvalue in userinlist): #and (passwordentryvalue in passwordinlist)
             messagebox.showerror(
                 title="Error", message="The typed user already exist")
-        elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
+        elif (userentryvalue not in userinlist):
             if entryValueChecker(x, y) == True :
                 messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
             elif (" " in x) or (" " in y):
                 messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
             elif (x.isascii() == False) or (y.isascii() == False):
-                messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCHII format")
+                messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCII format")
             else:
                 registernow(rootwindow, x, y)
                 
@@ -182,7 +181,9 @@ def loggin(rootwindow):
                           font=("Arial", 60, "bold"))
     userentry.grid()
     passwordentry.grid()
-
+    counter = []
+    now = datetime.datetime.now()
+    hour = now.hour
     def loggin_attempt():
         selectUser()
         userentryvalue = str(usersv.get())
@@ -193,19 +194,24 @@ def loggin(rootwindow):
         passwordinlist = passwordList()
         x = userentryvalue
         y = passwordentryvalue
+        print(userinlist, passwordinlist)
         tries = 0
         if (userentryvalue in userinlist) and (passwordentryvalue in passwordinlist):
             cleanWindow(logginframe)
-        elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
-            if x == "" or y == "":# if entryValueChecker(x, y) == True :
-                messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
-            elif " " in x or " " in y:
-                messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
-            elif (x in userinlist) and (y not in passwordinlist):
-                messagebox.showwarning(title='Password Error', message="Wrong Password")
-            else:
-                messagebox.showerror(
-                title="Error", message="The typed user doesn't exist")
+        elif x == "" or y == "":# if entryValueChecker(x, y) == True :
+            messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
+        elif " " in x or " " in y:
+            messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
+        elif (x in userinlist) and (y not in passwordinlist):
+            messagebox.showwarning(title='Password Error', message="Wrong Password")
+            counter.append(0)
+            if len(counter) > 4:
+                messagebox.showerror(title='So much tries', message='So much tries')
+                with open(file='log.txt', mode='r+') as file:
+                    file.write(f'{hour}')
+        else:
+            messagebox.showerror(
+            title="Error", message="The typed user doesn't exist")
     confirmbutton = Button(logginframe, text='Click Here to Loggin', font=(
         "Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: loggin_attempt()).grid()
     goBack(logginframe, mainwindowframe)

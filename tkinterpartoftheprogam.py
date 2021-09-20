@@ -38,7 +38,7 @@ root.title("Personal Database")
 zoomed(root)
 # root.attributes('-fullscreen', True)
 # root.iconbitmap("C:/Users/Guilherme/Downloads/personaldata_Msh_icon.ico")
-icon = PhotoImage(file="C:/Users/guilh/OneDrive/Progamar/personaldata.png")
+icon = PhotoImage(file="C:/Users/guilh/Desktop/ORGHHBB0066/imagens/personaldata.png")
 root.iconphoto(True, icon)
 # or u can also put instead of black the hex code of some color u want
 root.config(background="White")
