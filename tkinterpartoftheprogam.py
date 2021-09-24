@@ -44,12 +44,15 @@ class app():
         #----------------------------------------------------------------------------------
         #Buttons
         self.register_button = Button(self.register_frame, text='Register', font='Arial 40', command=lambda: register_attempt(mainwindow, self.user_entry_register, self.password_entry_register, frameback=menu_frame))
-        self.goback_button = Button(self.register_frame,  text='Go back', font='Arial 40', command=lambda: show(self.menu_frame))
+        self.goback_button = Button(self.register_frame,  text='Go back', font='Arial 40', command=lambda: show(self.menu_frame, self.user_entry_register, self.password_entry_register))
+        #Checkbutton
+        self.cregister_var = IntVar()
+        self.register_checkbutton = Checkbutton(self.register_frame,font="Arial 15", text="Show Password", width=20,height=20, variable=self.cregister_var, onvalue=1, offvalue=0, command=lambda:showPassword(self.password_entry_register, self.cregister_var))
         
         #------------------------------------------------------------------------------------------------------------------------
         
         #LAYOUT register_frame
-        self.loggin_frame['width'] = self.width
+        self.loggin_frame['width'] = self.width 
         self.loggin_frame['height'] = self.height
 
         self.label_user.place(relx=0.25, rely=0.3, anchor=CENTER)
@@ -57,6 +60,7 @@ class app():
         self.user_entry_register.place(relx=0.55, rely=0.3, anchor=CENTER)
         self.password_entry_register.place(relx=0.55, rely=0.5, anchor=CENTER)
         self.register_button.place(relx=0.5, rely=0.65, anchor=CENTER)
+        self.register_checkbutton.place(relx=0.920, rely=0.65, anchor=CENTER)
         self.goback_button.place(relx=0.713, rely=0.65, anchor=CENTER)
 
         #-----------------------------------------------------------------------------------------------------------------------
@@ -71,13 +75,17 @@ class app():
         #-----------------------------------------------------------------------------------------------------------------------
         #Entries
         self.user_entry_loggin = Entry(self.loggin_frame, font='Arial 40')
-        self.password_entry_loggin = Entry(self.loggin_frame, font='Arial 40')
+        self.password_entry_loggin = Entry(self.loggin_frame, show="*", font='Arial 40')
         #-----------------------------------------------------------------------------------------------------------------------
         #Buttons
         self.loggin_button = Button(self.loggin_frame, text='Loggin', font='Arial 40', command=lambda: loggin_attempt(mainwindow,self.user_entry_loggin, self.password_entry_loggin))
-        self.goback_button = Button(self.loggin_frame,  text='Go Back', font='Arial 40', command=lambda: show(self.menu_frame))
+        self.goback_button = Button(self.loggin_frame,  text='Go Back', font='Arial 40', command=lambda: show(self.menu_frame, self.user_entry_loggin, self.password_entry_loggin))
         #-----------------------------------------------------------------------------------------------------------------------
-
+        #Checkbutton
+        self.cloggin_var = IntVar()
+        self.loggin_checkbutton = Checkbutton(self.loggin_frame,font="Arial 15", text="Show Password", width=20, height=20, variable=self.cloggin_var, onvalue=1, offvalue=0, command=lambda:showPassword(self.password_entry_loggin, self.cloggin_var))
+        #-----------------------------------------------------------------------------------------------------------------------
+        
         #LAYOUT loggin_frame     
         self.loggin_frame['width'] = self.width
         self.loggin_frame['height'] = self.height
@@ -87,6 +95,7 @@ class app():
         self.user_entry_loggin.place(relx=0.55, rely=0.3, anchor=CENTER)
         self.password_entry_loggin.place(relx=0.55, rely=0.5, anchor=CENTER)
         self.loggin_button.place(relx=0.5, rely=0.65, anchor=CENTER)
+        self.loggin_checkbutton.place(relx=0.920, rely=0.65, anchor=CENTER)
         self.goback_button.place(relx=0.713, rely=0.65, anchor=CENTER)
 
         #-------------------------------------------------------------------------------------
@@ -98,6 +107,7 @@ class app():
         show(self.menu_frame)
 
         self.mainwindow.mainloop() 
+
 
 
 if __name__ == "__main__":
