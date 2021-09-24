@@ -10,8 +10,8 @@ We are trying to do a Sqlite DataBase Manager, the progect is no complete actual
 <h3>Requirements</h3>
 º᲼᲼᲼<a target="_blank" href="https://www.python.org/downloads/">Python (3.8++)</a><br>
 º᲼᲼᲼You'll need to clone our repo, and you can do like that:<br>
-<code><pre>git clone --single-branch --branch HHBB0066-new-update https://github.com/BLONG06/ORGHHBB0066.git
-</pre></code>
+<code>git clone --single-branch --branch HHBB0066-new-update https://github.com/BLONG06/ORGHHBB0066.git
+</code>
 
 
 <hr>
