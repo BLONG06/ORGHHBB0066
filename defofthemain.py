@@ -15,18 +15,20 @@ def show(frame, *entries):
          This function raise a frame and clean the frame's entries
     '''
     frame.tkraise()
-    entry_list = []
     for entry in entries:
-        entry_list.append()
+        entry.delete(0, "end")
 
 def login_info_verify(user, password):
     # c.execute(f"SELECT USER,PASSWORD FROM LOGGINDATA WHERE USER='{user}' AND PASSWORD='{password}'")
     # return c.fetchone()
     c.execute(f"SELECT PASSWORD FROM LOGGINDATA WHERE USER='{user}'")
-    senha = c.fetchone()
-    if senha[0] in password:
-        return True
-    else:
+    passwordDB = flatit(c.fetchall())
+    try:
+        if password in passwordDB[0]:
+            return True
+        else:
+            return False
+    except IndexError as error:
         return False
 def selectUser():
     c.execute("SELECT USER FROM LOGGINDATA")
@@ -42,6 +44,16 @@ def all_children(window):
             _list.extend(item.winfo_children())
 
     return _list
+
+def showPassword(pwdenf, checkboxvar):
+    
+    # for checkbox in checkboxvar:
+    if checkboxvar.get() == 1:
+        pwdenf.config(show="")
+        
+    elif checkboxvar.get() == 0:
+        pwdenf.config(show="*")
+        
 
 def cleanWindow(MainWindow):
     widget_list = all_children(MainWindow)
@@ -118,7 +130,7 @@ def loggin_attempt(rootwindow,usrentv,pwdetv):
     if login_info_verify(x,y):
         cleanWindow(rootwindow)
     
-    else:
+    elif login_info_verify(x,y) == False:
         if x == "" or y == "":# if entryValueChecker(x, y) == True :
             messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
         elif " " in x or " " in y:
