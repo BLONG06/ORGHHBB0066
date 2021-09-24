@@ -118,7 +118,7 @@ def register_attempt(rootwindow,usrentv, pwdetv, frameback):
         elif (" " in x) or (" " in y):
             messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
         elif (x.isascii() == False) or (y.isascii() == False):
-            messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCHII format")
+            messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCII format")
         else:
             registernow(rootwindow, x, y, frameback=frameback)    
 
@@ -135,7 +135,8 @@ def loggin_attempt(rootwindow,usrentv,pwdetv):
             messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
         elif " " in x or " " in y:
             messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
-        
+        elif (x.isascii() == False) or (y.isascii() == False):
+            messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCII format")
         elif login_info_verify(x,y) == False:
             messagebox.showinfo(title='Password Error', message="Wrong password")
         else:
