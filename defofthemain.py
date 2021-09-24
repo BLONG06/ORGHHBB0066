@@ -2,73 +2,37 @@ from sqlite3.dbapi2 import Error
 from tkinter import *
 from tkinter import font, messagebox
 from tkinter.font import BOLD, Font
-from typing import Counter
 from sqlofthemain import *
 import time
 import itertools
 from os import name as os_name
 
 
-def zoomed(window):
-    """ 
-    Windows and Linux compatible full window creation option
+# -------------------------------------------------------------------------------------
+# Functions
+def show(frame, *entries):
+    '''
+         This function raise a frame and clean the frame's entries
+    '''
+    frame.tkraise()
+    entry_list = []
+    for entry in entries:
+        entry_list.append()
 
-    -> window: Toplevel widget (CLASSNAME)
-    """
-    if os_name == 'nt': 
-        window.state('zoomed') 
-    else: 
-        window.attributes('-zoomed', True)
-
-
+def login_info_verify(user, password):
+    # c.execute(f"SELECT USER,PASSWORD FROM LOGGINDATA WHERE USER='{user}' AND PASSWORD='{password}'")
+    # return c.fetchone()
+    c.execute(f"SELECT PASSWORD FROM LOGGINDATA WHERE USER='{user}'")
+    senha = c.fetchone()
+    if senha[0] in password:
+        return True
+    else:
+        return False
 def selectUser():
     c.execute("SELECT USER FROM LOGGINDATA")
 
 def selectPassword():
     c.execute("SELECT PASSWORD FROM LOGGINDATA")
-
-def runMainWindow():
-    global mainwindowframe, mainwindow
-    mainwindow = Tk()
-    # mainwindow.state('zoomed')
-    zoomed(mainwindow)
-    # mainwindow.attributes('-fullscreen', True)
-    mainwindow.title('Loggin')
-    mainwindow.iconbitmap
-    mainwindow.resizable(height=False, width=False)
-    mainwindowframe = Frame(mainwindow, relief=FLAT)
-    registerbutton = Button(mainwindowframe, text=('register'), font=('Arial', 40, 'bold'), padx=600, pady=150,
-                            bg='white', justify="center", command=lambda: register(rootwindow=mainwindow)).grid()    
-    
-    logginbutton = Button(mainwindowframe, text="loggin", font=("Arial", 40, "bold"), padx=620,
-                          pady=150, bg='white', command=lambda: loggin(mainwindow)).grid()
-    mainwindowframe.grid()
-    # mainwindow.update()
-    mainwindow.mainloop()
-
-    
-class ValueIsEmptyError(Error):
-    """Raised when there is nothing in the entry input field"""
-    pass
-
-def entryValueChecker(entry, entry2):
-    """
-        It's gonna return True if there is nothing, or it's gonna return False if there is anything.
-
-    """
-    if (entry.isspace() == True or entry == "") or (entry2.isspace() == True or entry2 == ""):
-        return True
-    else:
-        return False
-
-# class valueIsEmpty(Exception):
-#     def __init__(self, message, entry, entry2):
-#        super().__init__(message)
-#        entryValueChecker().__init__(entry, entry2)
-#        self.entry = entry
-#        self.entry2 = entry2
-#        if entryValueChecker(entry, entry2) == True:
-#            raise valueIsEmpty(message="You have to put something on the entry", entry=entry, e2=entry2)
 
 def all_children(window):
     _list = window.winfo_children()
@@ -79,32 +43,24 @@ def all_children(window):
 
     return _list
 
-def goBack(packbuttonframe, fmtpk):
-    def goBackNow(forgetframe,frametopack):
-        forgetframe.grid_forget()
-        frametopack.grid()
-    gobackbutton = Button(packbuttonframe, text='Go Back', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: goBackNow(forgetframe=packbuttonframe, frametopack=fmtpk)).grid()
-
-
 def cleanWindow(MainWindow):
     widget_list = all_children(MainWindow)
     for item in widget_list:
         item.destroy()
 
-def registernow(mainwindow,usrentv,pwdentv):
+def registernow(mainwindow,usrentv,pwdentv, frameback):
     c.execute("SELECT * FROM LOGGINDATA")
     c.execute("INSERT INTO LOGGINDATA (USER, PASSWORD) VALUES (?, ?)", (usrentv, pwdentv))
-    print(usrentv, pwdentv)
+    conn.commit()
     messagebox.showinfo(title="Successful",
                         message="Successfully Registered")
-    cleanWindow(mainwindow)
+    show(frameback)
     mainwindow.update()
 
 def flatit(listtoflat):
     flatten = itertools.chain.from_iterable
     listtoflat = list(flatten(listtoflat))
     return listtoflat
-
 
 def usersList():
     selectUser()
@@ -123,134 +79,54 @@ def passwordList():
     passwordinlist = flatit(passwordinlist)
     return passwordinlist
 
+def entryValueChecker(entry, entry2):
+    """
+        It's gonna return True if there is nothing, or it's gonna return False if there is anything.
+
+    """
+    if (entry.isspace() == True or entry == "") or (entry2.isspace() == True or entry2 == ""):
+        return True
+    else:
+        return False
 
 
+def register_attempt(rootwindow,usrentv, pwdetv, frameback):
+    userinlist = usersList()
+    passwordinlist = passwordList()
+    userentryvalue = str(usrentv.get())
+    passwordentryvalue = str(pwdetv.get())
+    x = str(userentryvalue)
+    y = str(passwordentryvalue)
+    if (userentryvalue in userinlist): #and (passwordentryvalue in passwordinlist)
+        messagebox.showerror(
+            title="Error", message="The typed user already exist")
+    elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
+        if entryValueChecker(x, y) == True :
+            messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
+        elif (" " in x) or (" " in y):
+            messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
+        elif (x.isascii() == False) or (y.isascii() == False):
+            messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCHII format")
+        else:
+            registernow(rootwindow, x, y, frameback=frameback)    
 
-def MyClick(rootwindow, whatever):
-    MyLabel = Label(rootwindow, text=(f"Hello {whatever.get()}"))
-    MyLabel.grid()
+def loggin_attempt(rootwindow,usrentv,pwdetv):
+    userentryvalue = str(usrentv.get())
+    passwordentryvalue = str(pwdetv.get())
+    x = str(userentryvalue)
+    y = str(passwordentryvalue)
+    if login_info_verify(x,y):
+        cleanWindow(rootwindow)
+    
+    else:
+        if x == "" or y == "":# if entryValueChecker(x, y) == True :
+            messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
+        elif " " in x or " " in y:
+            messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
+        
+        elif login_info_verify(x,y) == False:
+            messagebox.showinfo(title='Password Error', message="Wrong password")
+        else:
+            messagebox.showinfo(title="User Error", message="The Typed User Doesn't Exist")
 
-
-def register(rootwindow):
-    mainwindowframe.grid_forget()
-    usersv = StringVar()
-    passwordsv = StringVar()
-    registerframe = Frame(rootwindow, relief=FLAT)
-    userentry = Entry(registerframe, textvariable=usersv, font=("Arial", 60, "bold"))
-    passwordentry = Entry(registerframe, textvariable=passwordsv,
-                          font=("Arial", 60, "bold"))
-    userentry.grid()
-    passwordentry.grid()
-    def register_attempt():
-        selectUser()
-        userentryvalue = str(usersv.get())
-        # userentryvalue = str(userentryvalue)
-        passwordentryvalue = str(passwordsv.get())
-        # passwordentryvalue = str(passwordentryvalue)
-        # print(userentryvalue, passwordentryvalue)
-        userinlist = usersList()
-        passwordinlist = passwordList()
-        x = userentryvalue
-        y = passwordentryvalue
-        if (userentryvalue in userinlist): #and (passwordentryvalue in passwordinlist)
-            messagebox.showerror(
-                title="Error", message="The typed user already exist")
-        elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
-            if entryValueChecker(x, y) == True :
-                messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
-            elif (" " in x) or (" " in y):
-                messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
-            elif (x.isascii() == False) or (y.isascii() == False):
-                messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCHII format")
-            else:
-                registernow(rootwindow, x, y)
-                
-        # register_attempt()
-    confirmbutton = Button(registerframe, text='Click Here to Register', font=("Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: register_attempt()).grid()
-    goBack(registerframe, mainwindowframe)
-    registerframe.grid()
-    print()
-
-
-def loggin(rootwindow):
-    mainwindowframe.grid_forget()
-    usersv = StringVar()
-    passwordsv = StringVar()
-    logginframe = Frame(rootwindow, relief=FLAT)
-    userentry = Entry(logginframe, textvariable=usersv, font=("Arial", 60, "bold"))
-    passwordentry = Entry(logginframe, textvariable=passwordsv,
-                          font=("Arial", 60, "bold"))
-    userentry.grid()
-    passwordentry.grid()
-
-    def loggin_attempt():
-        selectUser()
-        userentryvalue = str(usersv.get())
-        # userentryvalue = str(userentryvalue)
-        passwordentryvalue = str(passwordsv.get())
-        # passwordentryvalue = str(passwordentryvalue)
-        userinlist = usersList()
-        passwordinlist = passwordList()
-        x = userentryvalue
-        y = passwordentryvalue
-        tries = 0
-        if (userentryvalue in userinlist) and (passwordentryvalue in passwordinlist):
-            cleanWindow(logginframe)
-        elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
-            if x == "" or y == "":# if entryValueChecker(x, y) == True :
-                messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
-            elif " " in x or " " in y:
-                messagebox.showerror(title="Space error", message="Remove the spaces on the fields")
-            elif (x in userinlist) and (y not in passwordinlist):
-                messagebox.showwarning(title='Password Error', message="Wrong Password")
-            else:
-                messagebox.showerror(
-                title="Error", message="The typed user doesn't exist")
-    confirmbutton = Button(logginframe, text='Click Here to Loggin', font=(
-        "Arial", 60, BOLD), relief=GROOVE, padx=220, pady=50, command=lambda: loggin_attempt()).grid()
-    goBack(logginframe, mainwindowframe)
-    logginframe.grid()
-    # for query_result in c.fetchall():
-    #         if userentryvalue not in query_result:
-    #             # messagebox.showerror(title="Error", message="User doesn't exist, please come back and register")
-    #             notinlist = []
-    #             notinlist.append(query_result)
-    #             if userentryvalue in notinlist:
-    #                 widget_list = all_children(rootwindow)
-    #                 for item in widget_list:
-    #                     item.destroy()
-
-    #             else:
-    #                 messagebox.showerror(title="Error", message="User does not exists")
-    #             print(notinlist)
-
-
-# widget_list = all_children(rootwindow)
-#                 for item in widget_list:
-#                         item.destroy()
-#             elif userentryvalue not in query_result:
-#                 messagebox.showerror(title="Error", message="User doesn't exist, please come back and register!")
-
-
-   #     time.sleep(5)
-                # errorobject = valueIsEmpty(message="We got a error", entry=x, entry2=y)
-                # try:
-                #     rootwindow.update()
-                #     if (x or y == "") or (x.isspace() or y.isspace() == True):
-                #         raise ValueIsEmptyError
-                #     # c.execute("SELECT * FROM LOGGINDATA")
-                #     # print("Something just for a simple test")
-                #     # c.exe-cute("INSERT INTO LOGGINDATA (USER, PASSWORD) VALUES (?, ?)",
-                #     #           (userentryvalue, passwordentryvalue))
-                #     # messagebox.showinfo(title="Successful",
-                #     #                     message="Successfully Registered")
-                #     # cleanWindow(rootwindow)
-                #     # rootwindow.update()
-                # except ValueIsEmptyError:
-                #     print("Please, fill in the fields")
-                #     # rootwindow.update()
-                #     print("Error: It should be something in the entry")
-                #     messagebox.showerror(title="Error", message="It should be something on the entry field")
-                #     break
-                # print('deu certo')
-                # registernow(mainwindow=rootwindow, usrentv=x, pwdentv=y)
+# -------------------------------------------------------------------------------------
