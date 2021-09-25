@@ -112,7 +112,7 @@ def register_attempt(rootwindow,usrentv, pwdetv, frameback):
     if (userentryvalue in userinlist): #and (passwordentryvalue in passwordinlist)
         messagebox.showerror(
             title="Error", message="The typed user already exist")
-    elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
+    elif (userentryvalue not in userinlist):
         if entryValueChecker(x, y) == True :
             messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
         elif (" " in x) or (" " in y):
