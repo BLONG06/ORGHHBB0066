@@ -74,7 +74,7 @@ def flatit(listtoflat):
     listtoflat = list(flatten(listtoflat))
     return listtoflat
 
-def usersList():
+def usersList(): 
     selectUser()
     userinlist = []
     for queryresult in c.fetchall():
@@ -100,8 +100,14 @@ def entryValueChecker(entry, entry2):
         return True
     else:
         return False
-
-
+def abcc(h, suposed_color):
+            '''abcc = Any Button color changer'''
+            v = h['bg'] = f'{suposed_color}'
+            return v
+def ab(a,suposed_color_on="white", suposed_color_off="SystemButtonFace"):
+    a.bind("<Enter>", lambda e: abcc(a, f'{suposed_color_on}'))
+    a.bind("<Leave>", lambda e: abcc(a, f'{suposed_color_off}'))
+    
 def register_attempt(rootwindow,usrentv, pwdetv, frameback):
     userinlist = usersList()
     passwordinlist = passwordList()
@@ -112,7 +118,7 @@ def register_attempt(rootwindow,usrentv, pwdetv, frameback):
     if (userentryvalue in userinlist): #and (passwordentryvalue in passwordinlist)
         messagebox.showerror(
             title="Error", message="The typed user already exist")
-    elif (userentryvalue not in userinlist):
+    elif (userentryvalue not in userinlist) or (passwordentryvalue not in passwordinlist):
         if entryValueChecker(x, y) == True :
             messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
         elif (" " in x) or (" " in y):
@@ -121,6 +127,10 @@ def register_attempt(rootwindow,usrentv, pwdetv, frameback):
             messagebox.showerror(title='ASCII Error', message="All charcters has to be on a ASCII format")
         else:
             registernow(rootwindow, x, y, frameback=frameback)    
+def startApp(mainwindow):
+    db_frame = Frame(mainwindow, bg="blue", background= "red")
+    db_frame.place()
+    show(db_frame)
 
 def loggin_attempt(rootwindow,usrentv,pwdetv):
     userentryvalue = str(usrentv.get())
@@ -128,8 +138,7 @@ def loggin_attempt(rootwindow,usrentv,pwdetv):
     x = str(userentryvalue)
     y = str(passwordentryvalue)
     if login_info_verify(x,y):
-        cleanWindow(rootwindow)
-    
+        startApp(rootwindow)
     elif login_info_verify(x,y) == False:
         if x == "" or y == "":# if entryValueChecker(x, y) == True :
             messagebox.showerror(title="Empty Field", message="Please fill both of the fields")
